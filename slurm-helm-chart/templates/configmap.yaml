@@ -10,7 +10,7 @@ data:
     SlurmctldTimeout=120
     SchedulerType=sched/backfill
     SlurmctldLogFile=/var/spool/slurmd/slurmctld.log
-    PidFile=/var/spool/slurmd/slurmctld.pid  # Only used by the controller
+    #PidFile=/var/spool/slurmd/slurmctld.pid  # Only used by the controller
 
     NodeName=hpc-node[1-4] Procs=4 State=UNKNOWN
     NodeName=ai-node[1-4] Gres=gpu:4 Procs=4 State=UNKNOWN
