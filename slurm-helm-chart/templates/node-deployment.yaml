@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slurm-node
+spec:
+  replicas: {{ .Values.slurm.node.replicas }}
+  selector:
+    matchLabels:
+      app: slurm
+      component: node
+  template:
+    metadata:
+      labels:
+        app: slurm
+        component: node
+    spec:
+      containers:
+      - name: slurm-node
+        image: {{ .Values.slurm.node.image }}
+        volumeMounts:
+        - name: slurm-node-config
+          mountPath: /etc/slurm-llnl/slurm.conf
+          subPath: slurm.conf
+      volumes:
+      - name: slurm-node-config
+        configMap:
+          name: slurm-node-config

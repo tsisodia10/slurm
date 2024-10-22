@@ -1,0 +1,77 @@
+# SLURM configuration for both the controller and nodes
+slurm:
+  controller:
+    image: quay.io/tsisodia10/slurm-controller:0.12
+    replicas: 1
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "1"
+      limits:
+        memory: "4Gi"
+        cpu: "2"
+    volumeMounts:
+      - name: slurm-controller-config
+        mountPath: /etc/slurm-llnl/slurm.conf
+        subPath: slurm.conf
+
+  node:
+    image: quay.io/tsisodia10/slurm-node:0.12
+    replicas: 4
+    resources:
+      requests:
+        memory: "4Gi"
+        cpu: "2"
+      limits:
+        memory: "8Gi"
+        cpu: "4"
+      nvidia.com/gpu: "2"
+    volumeMounts:
+      - name: slurm-node-config
+        mountPath: /etc/slurm-llnl/slurm.conf
+        subPath: slurm.conf
+
+
+service:
+  type: ClusterIP
+  port: 6817
+
+
+partitions:
+  - name: hpc
+    nodes: hpc-node[1-4]
+    state: UP
+    maxTime: "INFINITE"
+
+  - name: ai
+    nodes: ai-node[1-4]
+    state: UP
+    gres: gpu:4
+    maxTime: "INFINITE"
+
+resources:
+  requests:
+    memory: "4Gi"
+    cpu: "2"
+  limits:
+    memory: "8Gi"
+    cpu: "4"
+    nvidia.com/gpu: "2"
+
+slurm.conf:
+  - ControlMachine: slurm-controller
+  - AuthType: auth/none
+  - SlurmdPort: 6818
+  - SlurmctldPort: 6817
+  - SlurmdTimeout: 300
+  - SlurmctldTimeout: 120
+  - SchedulerType: sched/backfill
+  - SlurmdLogFile: /var/log/slurm/slurmd.log
+  - SlurmctldLogFile: /var/log/slurm/slurmctld.log
+  - ClusterName: my-cluster
+
+  - NodeName: hpc-node[1-4] Procs=4 State=UNKNOWN
+  - NodeName: ai-node[1-4] Gres=gpu:4 Procs=4 State=UNKNOWN
+
+  - PartitionName: hpc Nodes=hpc-node[1-4] Default=NO MaxTime=INFINITE State=UP
+  - PartitionName: ai Nodes=ai-node[1-4] Default=YES MaxTime=INFINITE State=UP

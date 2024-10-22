@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: slurm-controller-config
+data:
+  slurm.conf: |
+    ClusterName=my-cluster
+    ControlMachine=slurm-controller
+    SlurmctldPort=6817
+    SlurmctldTimeout=120
+    SchedulerType=sched/backfill
+    SlurmctldLogFile=/var/spool/slurmd/slurmctld.log
+    PidFile=/var/spool/slurmd/slurmctld.pid  # Only used by the controller
+
+    NodeName=hpc-node[1-4] Procs=4 State=UNKNOWN
+    NodeName=ai-node[1-4] Gres=gpu:4 Procs=4 State=UNKNOWN
+
+    PartitionName=hpc Nodes=hpc-node[1-4] Default=NO MaxTime=INFINITE State=UP
+    PartitionName=ai Nodes=ai-node[1-4] Default=YES MaxTime=INFINITE State=UP

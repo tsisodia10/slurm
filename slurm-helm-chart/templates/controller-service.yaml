@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: slurm-controller
+spec:
+  type: {{ .Values.service.type }}  # Ensure that the service type (ClusterIP, NodePort, LoadBalancer) is defined in values.yaml
+  ports:
+    - port: {{ .Values.service.port }}  # The port exposed by the service, configurable via values.yaml
+      targetPort: 6817                  # TargetPort is the SLURM controller port inside the container (6817)
+      protocol: TCP                     # Use TCP for SLURM controller communication
+      name: slurm-ctl
+  selector:
+    app: slurm                         # Ensure that it matches the label in your controller deployment
+    component: controller               # Matches the component label for the SLURM controller

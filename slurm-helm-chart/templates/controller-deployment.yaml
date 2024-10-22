@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slurm-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slurm
+      component: controller
+  template:
+    metadata:
+      labels:
+        app: slurm
+        component: controller
+    spec:
+      containers:
+      - name: slurm-controller
+        image: {{ .Values.slurm.controller.image }}
+        volumeMounts:
+        - name: slurm-controller-config
+          mountPath: /etc/slurm-llnl/slurm.conf
+          subPath: slurm.conf
+      volumes:
+      - name: slurm-controller-config
+        configMap:
+          name: slurm-controller-config
