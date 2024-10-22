@@ -3,12 +3,12 @@ kind: Service
 metadata:
   name: slurm-node
 spec:
-  type: ClusterIP  # The service is internal to the cluster, allowing SLURM nodes to communicate
+  type: ClusterIP
   ports:
-    - port: 6818           # Expose the node communication port
-      targetPort: 6818      # Map it to the internal container port (SLURM daemon port)
-      protocol: TCP         # SLURM uses TCP for node communication
+    - port: 6818 
+      targetPort: 6818
+      protocol: TCP
       name: slurm-node
   selector:
-    app: slurm              # Ensure this matches the label in the node deployment
-    component: node          # Ensure this matches the component label for the SLURM node
+    app: slurm
+    component: node

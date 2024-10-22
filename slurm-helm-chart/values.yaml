@@ -1,7 +1,7 @@
 # SLURM configuration for both the controller and nodes
 slurm:
   controller:
-    image: quay.io/tsisodia10/slurm-controller:0.12
+    image: quay.io/tsisodia10/slurm-controller:0.16
     replicas: 1
     resources:
       requests:

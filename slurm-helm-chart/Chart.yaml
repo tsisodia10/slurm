@@ -1,5 +1,5 @@
 apiVersion: v2
-name: slurm-helm-chart  # Name of the Helm chart
+name: slurm-helm-chart
 description: A basic SLURM cluster deployment Helm chart
-version: 0.1.0          # Chart version, this can be incremented when changes are made
-appVersion: "22.05"     # Version of the SLURM application being deployed
+version: 0.1.0
+appVersion: "22.05"

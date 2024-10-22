@@ -5,6 +5,7 @@ metadata:
 data:
   slurm.conf: |
     ClusterName=my-cluster
+    SlurmctldHost=slurm-controller
     SlurmdPort=6818
     SlurmdTimeout=300
     SlurmdLogFile=/var/spool/slurmd/slurmd.log
@@ -12,3 +13,4 @@ data:
     NodeName=ai-node[1-4] Gres=gpu:4 Procs=4 State=UNKNOWN
     PartitionName=hpc Nodes=hpc-node[1-4] Default=NO MaxTime=INFINITE State=UP
     PartitionName=ai Nodes=ai-node[1-4] Default=YES MaxTime=INFINITE State=UP
+
