@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slurm-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slurm-controller
+  template:
+    metadata:
+      labels:
+        app: slurm-controller
+    spec:
+      containers:
+      - name: slurmctld
+        image: scicomp/slurm
+        ports:
+        - containerPort: 6817
+        - containerPort: 6818
+        - containerPort: 6819
+        volumeMounts:
+        - name: slurm-dir
+          mountPath: /etc/slurm
+        - name: slurm-conf
+          subPath: slurm.conf
+          mountPath: /etc/slurm/slurm.conf
+      volumes:
+      - name: slurm-dir
+        emptyDir: {}
+      - name: slurm-conf
+        configMap:
+          name: slurm-config

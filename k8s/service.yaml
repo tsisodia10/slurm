@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: slurm-controller-service
+  labels:
+    app: slurm-controller
+spec:
+  selector:
+    app: slurm-controller
+  ports:
+  - protocol: TCP
+    port: 6817
+    targetPort: 6817
+    name: slurmctld-port
+  - protocol: TCP
+    port: 6818
+    targetPort: 6818
+    name: slurmd-port
+  - protocol: TCP
+    port: 6819
+    targetPort: 6819
+    name: slurmdbd-port
+  type: ClusterIP

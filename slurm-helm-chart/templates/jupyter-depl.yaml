@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupyter-notebook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jupyter
+  template:
+    metadata:
+      labels:
+        app: jupyter
+    spec:
+      containers:
+      - name: jupyter-notebook
+        image: quay.io/tsisodia10/jupyter:0.1 # Replace with your Jupyter Notebook image
+        ports:
+        - containerPort: 8888
+        env:
+        - name: SLURMCTLD_HOST
+          value: "slurm-controller-headless"
+        volumeMounts:
+        - name: slurm-config
+          mountPath: /etc/slurm-llnl
+      volumes:
+      - name: slurm-config
+        configMap:
+          name: slurm-config

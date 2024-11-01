@@ -1,19 +1,27 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: slurm-controller-config
+  name: slurm-config
 data:
   slurm.conf: |
     ClusterName=my-cluster
-    ControlMachine=slurm-controller
+    ControlMachine=slurm-controller-headless
+    SlurmctldHost=slurm-controller-0
+    ControlAddr=ip-10-0-57-170.ec2.internal
     SlurmctldPort=6817
+    SlurmdPort=6818
     SlurmctldTimeout=120
+    SlurmdTimeout=300
+    SlurmctldLogFile=/var/log/slurm/slurmctld.log
+    SlurmdLogFile=/var/log/slurm/slurmd.log
+    MailProg=/bin/true
+
+    NodeName=slurm-node-[0-3] Sockets=1 CoresPerSocket=2 ThreadsPerCore=2 State=UNKNOWN
+    # NodeName=slurm-ai-node-[0-3] Sockets=1 CoresPerSocket=2 ThreadsPerCore=2 Gres=gpu:4 State=UNKNOWN
+
+    PartitionName=hpc Nodes=slurm-node-[0-3] Default=NO MaxTime=INFINITE State=UP
+    # PartitionName=ai Nodes=slurm-ai-node-[0-3] Default=YES MaxTime=INFINITE State=UP
+
+    ProctrackType=proctrack/linuxproc
     SchedulerType=sched/backfill
-    SlurmctldLogFile=/var/spool/slurmd/slurmctld.log
-    #PidFile=/var/spool/slurmd/slurmctld.pid  # Only used by the controller
 
-    NodeName=hpc-node[1-4] Procs=4 State=UNKNOWN
-    NodeName=ai-node[1-4] Gres=gpu:4 Procs=4 State=UNKNOWN
-
-    PartitionName=hpc Nodes=hpc-node[1-4] Default=NO MaxTime=INFINITE State=UP
-    PartitionName=ai Nodes=ai-node[1-4] Default=YES MaxTime=INFINITE State=UP

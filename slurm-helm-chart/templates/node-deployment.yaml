@@ -1,9 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: slurm-node
 spec:
-  replicas: {{ .Values.slurm.node.replicas }}
+  serviceName: "slurm-node-headless"
+  replicas: 4
   selector:
     matchLabels:
       app: slurm
@@ -14,9 +15,14 @@ spec:
         app: slurm
         component: node
     spec:
+      securityContext:
+        runAsUser: 0
+        allowPrivilegeEscalation: true
+        capabilities:
+          add: ["SYS_ADMIN"]
       containers:
       - name: slurm-node
-        image: {{ .Values.slurm.node.image }}
+        image: quay.io/tsisodia10/slurm-node:0.11  # Replace with your SLURM node image
         volumeMounts:
         - name: slurm-node-config
           mountPath: /etc/slurm-llnl/slurm.conf
@@ -24,4 +30,12 @@ spec:
       volumes:
       - name: slurm-node-config
         configMap:
-          name: slurm-node-config
+          name: slurm-config
+  volumeClaimTemplates:
+  - metadata:
+      name: slurm-node-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi

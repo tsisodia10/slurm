@@ -1,8 +1,9 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: slurm-controller
 spec:
+  serviceName: "slurm-controller-headless"
   replicas: 1
   selector:
     matchLabels:
@@ -14,14 +15,36 @@ spec:
         app: slurm
         component: controller
     spec:
+      securityContext:
+        runAsUser: 0
+        allowPrivilegeEscalation: true
+        capabilities:
+          add: ["SYS_ADMIN"]
       containers:
       - name: slurm-controller
         image: {{ .Values.slurm.controller.image }}
         volumeMounts:
-        - name: slurm-controller-config
+        - name: slurm-config
           mountPath: /etc/slurm-llnl/slurm.conf
           subPath: slurm.conf
+        - name: munge-key
+          mountPath: /etc/munge/munge.key
+          subPath: munge.key
+          readOnly: true
+        - name: slurm-state
+          mountPath: /var/spool   # Mounting the state volume here
       volumes:
-      - name: slurm-controller-config
+      - name: slurm-config
         configMap:
-          name: slurm-controller-config
+          name: slurm-config
+      - name: munge-key
+        configMap:
+          name: munge-key
+  volumeClaimTemplates:
+  - metadata:
+      name: slurm-state
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi

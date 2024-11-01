@@ -1,0 +1,13 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: jupyter-notebook
+spec:
+  to:
+    kind: Service
+    name: jupyter-notebook  # Must match the name of your Jupyter Notebook Service
+  port:
+    targetPort: 8888  # The port exposed by the Jupyter Notebook container
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
