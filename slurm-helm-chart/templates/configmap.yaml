@@ -5,9 +5,7 @@ metadata:
 data:
   slurm.conf: |
     ClusterName=my-cluster
-    ControlMachine=slurm-controller-headless
     SlurmctldHost=slurm-controller-0
-    ControlAddr=ip-10-0-57-170.ec2.internal
     SlurmctldPort=6817
     SlurmdPort=6818
     SlurmctldTimeout=120
@@ -19,7 +17,7 @@ data:
     NodeName=slurm-node-[0-3] Sockets=1 CoresPerSocket=2 ThreadsPerCore=2 State=UNKNOWN
     # NodeName=slurm-ai-node-[0-3] Sockets=1 CoresPerSocket=2 ThreadsPerCore=2 Gres=gpu:4 State=UNKNOWN
 
-    PartitionName=hpc Nodes=slurm-node-[0-3] Default=NO MaxTime=INFINITE State=UP
+    PartitionName=hpc Nodes=slurm-node-[0-3] Default=YES MaxTime=INFINITE State=UP
     # PartitionName=ai Nodes=slurm-ai-node-[0-3] Default=YES MaxTime=INFINITE State=UP
 
     ProctrackType=proctrack/linuxproc

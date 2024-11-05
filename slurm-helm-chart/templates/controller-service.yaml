@@ -3,9 +3,10 @@ kind: Service
 metadata:
   name: slurm-controller-headless
 spec:
-  clusterIP: None  # This makes it a headless service
+  clusterIP: None
   selector:
     app: slurm-controller
+    component: controller
   ports:
     - protocol: TCP
       port: 6817

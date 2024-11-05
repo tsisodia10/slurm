@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: slurm-node
 spec:
-  serviceName: "slurm-node-headless"
+  serviceName: slurm-node-headless
   replicas: 4
   selector:
     matchLabels:
@@ -22,7 +22,7 @@ spec:
           add: ["SYS_ADMIN"]
       containers:
       - name: slurm-node
-        image: quay.io/tsisodia10/slurm-node:0.11  # Replace with your SLURM node image
+        image: quay.io/tsisodia10/slurm-node:0.11
         volumeMounts:
         - name: slurm-node-config
           mountPath: /etc/slurm-llnl/slurm.conf

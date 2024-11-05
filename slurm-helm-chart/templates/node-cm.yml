@@ -5,13 +5,12 @@ metadata:
 data:
   slurm.conf: |
     ClusterName=my-cluster
-    SlurmctldHost=slurm-controller-0
+    SlurmctldHost=slurm-controller-headless  # Controller’s headless service name
     SlurmdPort=6818
     SlurmdTimeout=300
-    SlurmdLogFile=/var/spool/slurmd/slurmd.log
+    SlurmdLogFile=/var/log/slurm/slurmd.log
 
-    NodeName=slurm-node-[0-3] Procs=4 State=UNKNOWN
-    NodeName=slurm-ai-node-[0-3] Gres=gpu:4 Procs=4 State=UNKNOWN
-
+    # Node-specific configurations
+    NodeName=slurm-node-[0-3] Sockets=1 CoresPerSocket=2 ThreadsPerCore=2 State=UNKNOWN
     PartitionName=hpc Nodes=slurm-node-[0-3] Default=NO MaxTime=INFINITE State=UP
-    PartitionName=ai Nodes=slurm-ai-node-[0-3] Default=YES MaxTime=INFINITE State=UP
+

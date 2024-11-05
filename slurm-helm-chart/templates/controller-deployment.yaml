@@ -3,16 +3,16 @@ kind: StatefulSet
 metadata:
   name: slurm-controller
 spec:
-  serviceName: "slurm-controller-headless"
+  serviceName: slurm-controller-headless
   replicas: 1
   selector:
     matchLabels:
-      app: slurm
+      app: slurm-controller
       component: controller
   template:
     metadata:
       labels:
-        app: slurm
+        app: slurm-controller
         component: controller
     spec:
       securityContext:

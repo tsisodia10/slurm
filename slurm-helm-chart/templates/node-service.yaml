@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: slurm-node-headless
 spec:
-  clusterIP: None  # Use clusterIP: None for a headless service
+  clusterIP: None
   ports:
     - port: 6818
       targetPort: 6818
