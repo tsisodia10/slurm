@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: slurm-controller
 spec:
-  serviceName: slurm-controller-headless
+  serviceName: slurm-controller
   replicas: 1
   selector:
     matchLabels:
@@ -15,6 +15,10 @@ spec:
         app: slurm-controller
         component: controller
     spec:
+      dnsConfig:
+        searches:
+          - slurm-controller.tsisodia.svc.cluster.local
+          - slurm-node.tsisodia.svc.cluster.local
       securityContext:
         runAsUser: 0
         allowPrivilegeEscalation: true
@@ -27,19 +31,23 @@ spec:
         - name: slurm-config
           mountPath: /etc/slurm-llnl/slurm.conf
           subPath: slurm.conf
-        - name: munge-key
-          mountPath: /etc/munge/munge.key
-          subPath: munge.key
-          readOnly: true
         - name: slurm-state
           mountPath: /var/spool   # Mounting the state volume here
+        - mountPath: /run/munge
+          name: munge-socket 
+        - name: munge-key-volume
+          mountPath: /etc/munge/munge.key
+          subPath: munge.key
+          readOnly: true    
       volumes:
       - name: slurm-config
         configMap:
-          name: slurm-config
-      - name: munge-key
-        configMap:
-          name: munge-key
+          name: slurm-config  
+      - name: munge-socket
+        emptyDir: {}    
+      - name: munge-key-volume
+        secret:
+          secretName: munge-key-1     
   volumeClaimTemplates:
   - metadata:
       name: slurm-state

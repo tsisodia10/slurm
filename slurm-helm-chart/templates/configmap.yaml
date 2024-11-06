@@ -4,6 +4,7 @@ metadata:
   name: slurm-config
 data:
   slurm.conf: |
+    SlurmUser=slurm
     ClusterName=my-cluster
     SlurmctldHost=slurm-controller-0
     SlurmctldPort=6817
@@ -12,14 +13,17 @@ data:
     SlurmdTimeout=300
     SlurmctldLogFile=/var/log/slurm/slurmctld.log
     SlurmdLogFile=/var/log/slurm/slurmd.log
+    SlurmdSpoolDir=/var/spool/slurmd
+    StateSaveLocation=/var/spool/slurmd
+    SlurmctldPidFile=/run/slurmctld.pid
     MailProg=/bin/true
+    AuthType=auth/munge
+    CredType=cred/munge
+    ProctrackType=proctrack/linuxproc
+    SchedulerType=sched/backfill
 
     NodeName=slurm-node-[0-3] Sockets=1 CoresPerSocket=2 ThreadsPerCore=2 State=UNKNOWN
     # NodeName=slurm-ai-node-[0-3] Sockets=1 CoresPerSocket=2 ThreadsPerCore=2 Gres=gpu:4 State=UNKNOWN
 
     PartitionName=hpc Nodes=slurm-node-[0-3] Default=YES MaxTime=INFINITE State=UP
     # PartitionName=ai Nodes=slurm-ai-node-[0-3] Default=YES MaxTime=INFINITE State=UP
-
-    ProctrackType=proctrack/linuxproc
-    SchedulerType=sched/backfill
-
